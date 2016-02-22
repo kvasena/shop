@@ -1,0 +1,79 @@
+create user test@localhost identified by 'test';
+
+create database shop;
+
+grant all on shop.* to test;
+
+mysql -u test -p
+
+use shop;
+
+CREATE TABLE shop
+(
+shop_id int NOT NULL AUTO_INCREMENT,
+shop_name varchar(255) NOT NULL,
+PRIMARY KEY (shop_id)
+);
+
+INSERT INTO shop(shop_name) VALUES("Rozetka");
+INSERT INTO shop(shop_name) VALUES("Mobilluck");
+
+CREATE TABLE category
+(
+category_id int NOT NULL AUTO_INCREMENT,
+category_name varchar(255) NOT NULL,
+shop_id int NOT NULL,
+PRIMARY KEY (category_id),
+FOREIGN KEY(shop_id) REFERENCES shop(shop_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO category(category_name, shop_id) VALUES ("phones", 2);
+INSERT INTO category(category_name, shop_id) VALUES ("tv", 2);
+INSERT INTO category(category_name, shop_id) VALUES ("pc", 2);
+INSERT INTO category(category_name, shop_id) VALUES ("clothes", 1);
+INSERT INTO category(category_name, shop_id) VALUES ("shoes", 1);
+INSERT INTO category(category_name, shop_id) VALUES ("toys", 1);
+
+
+CREATE TABLE item
+(
+item_id int NOT NULL AUTO_INCREMENT,
+item_title varchar(255) NOT NULL,
+category_id int NOT NULL,
+item_price float(2) NOT NULL,
+item_status varchar(255) not null, 
+PRIMARY KEY (item_id), 
+foreign key(category_id) references category(category_id) on update cascade on delete cascade
+);
+
+INSERT INTO item(item_title, item_price, item_status) VALUES("lenovo", 3500, 'Available');
+INSERT INTO item(item_title, item_price, item_status) VALUES("lenovo", 10750.2, 'Available');
+INSERT INTO item(item_title, item_price, item_status) VALUES("iphone", 30000, 'Expected');
+INSERT INTO item(item_title, item_price, item_status) VALUES("samsung", 30000, 'Absent');
+INSERT INTO item(item_title, item_price, item_status) VALUES("hat", 760.5, 'Absent');
+INSERT INTO item(item_title, item_price, item_status) VALUES("jacket", 1250.75, 'Available');
+INSERT INTO item(item_title, item_price, item_status) VALUES("timberland", 2723.6, 'Available');
+INSERT INTO item(item_title, item_price, item_status) VALUES("badgley mishka", 2300, 'Expected');
+INSERT INTO item(item_title, item_price, item_status) VALUES("bear", 180, 'Available');
+
+
+CREATE TABLE category_item (
+id int NOT NULL AUTO_INCREMENT,
+item_id int NOT NULL,
+category_id INT NOT NULL,
+primary key(id),
+foreign key(item_id) REFERENCES ON item(item_id) ON UPDATE CASCADE ON DELETE CASCADE,
+foreign key(category_id) REFERENCES ON category(category_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO  category_item (item_id, category_id) VALUES (1,1);
+INSERT INTO  category_item (item_id, category_id) VALUES (2,3);
+INSERT INTO  category_item (item_id, category_id) VALUES (3,2);
+INSERT INTO  category_item (item_id, category_id) VALUES (3,1);
+INSERT INTO  category_item (item_id, category_id) VALUES (4,2);
+INSERT INTO  category_item (item_id, category_id) VALUES (5,4);
+INSERT INTO  category_item (item_id, category_id) VALUES (6,4);
+INSERT INTO  category_item (item_id, category_id) VALUES (7,5);
+INSERT INTO  category_item (item_id, category_id) VALUES (8,5);
+INSERT INTO  category_item (item_id, category_id) VALUES (9,6);
+
