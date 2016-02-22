@@ -1,4 +1,7 @@
-package shop;
+package shop.Shop;
+
+import shop.CategoryShop.CategoryShop;
+import shop.Item.Item;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

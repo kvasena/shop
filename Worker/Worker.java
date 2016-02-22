@@ -1,6 +1,12 @@
-package shop;
+package shop.Worker;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import shop.CategoryShop.CategoryShop;
+import shop.Creator.Creator;
+import shop.Creator.CreatorMobilluck;
+import shop.Creator.CreatorRozetka;
+import shop.Item.Item;
+import shop.Shop.Shop;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -12,27 +18,15 @@ import java.util.List;
 /**
  * Created by kvasena on 21.02.16.
  */
-public class RunnableClass extends Thread {
-    private static final String host = "jdbc:mysql://localhost:3306/shop";
-    private static final String user = "test";
-    private static final String password = "test";
+public class Worker extends Thread {
+    private Shop shop;
+
+    public Worker(Shop shop) {
+        this.shop = shop;
+    }
+
 
     public void run() {
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-            Connection connection = DriverManager.getConnection(host, user, password);
-            Creator[] creators = {new CreatorRozetka(), new CreatorMobilluck()};
-            List<Shop> shops = new ArrayList<Shop>();
-
-            for (Creator creator : creators) {
-                Shop newShop = creator.factoryMethod(connection);
-                shops.add(newShop);
-            }
-            Shop shop = shops.get(1);
-            CategoryShop category = new CategoryShop(connection, "pc", shop);
-            Item item = new Item(connection, "samsung", 4500.55, "Avaliable", category);
-
             //Записать по 3-4 продукта в категорию
             Item samsung = category.setItem(connection, "samsung", 4500.55, "Avaliable");
             Item lenovo = category.setItem(connection, "lenovo", 4500.55, "Avaliable");
@@ -63,8 +57,5 @@ public class RunnableClass extends Thread {
                 eachItem.setItemPrice(eachItem.getItemPrice() * 1.2);
                 System.out.println(eachItem);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

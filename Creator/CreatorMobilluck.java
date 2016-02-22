@@ -1,4 +1,7 @@
-package shop;
+package shop.Creator;
+
+import shop.Shop.Mobilluck;
+import shop.Shop.Shop;
 
 import java.sql.Connection;
 

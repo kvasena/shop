@@ -1,11 +1,12 @@
-package shop;
+package shop.Item;
+
+import shop.CategoryShop.CategoryShop;
+import shop.Shop.Shop;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kvasena on 20.02.16.

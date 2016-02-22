@@ -1,4 +1,4 @@
-package shop;
+package shop.CategoryShop;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import shop.Item.Item;
+import shop.Shop.Shop;
+
 
 /**
  * Created by kvasena on 20.02.16.

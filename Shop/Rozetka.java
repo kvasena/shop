@@ -1,4 +1,4 @@
-package shop;
+package shop.Shop;
 
 import java.sql.Connection;
 

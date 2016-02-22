@@ -1,4 +1,7 @@
-package shop;
+package shop.Creator;
+
+import shop.Shop.Rozetka;
+import shop.Shop.Shop;
 
 import java.sql.Connection;
 

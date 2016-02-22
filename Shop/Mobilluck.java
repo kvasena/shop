@@ -1,11 +1,11 @@
-package shop;
+package shop.Shop;
 
 import java.sql.Connection;
 
 /**
  * Created by kvasena on 21.02.16.
  */
-public class Mobilluck extends Shop{
+public class Mobilluck extends Shop {
     private static volatile Mobilluck instance;
 
     private Mobilluck(Connection connection, String shopName) {
