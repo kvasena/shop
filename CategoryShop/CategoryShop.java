@@ -27,7 +27,7 @@ public class CategoryShop {
 
         String queryInsert = String.format("INSERT INTO category(category_name, shop_id) " +
                 "VALUES (\'%s\', %d)", categoryName,shop.getShopId());
-        String queryCheck = String.format("SELECT category_id from category WHERE category_name = \'%s\' AND shop_id = %d",
+        String queryCheck = String.format("SELECT category_id from category WHERE category_name = \'%s\'",
                 categoryName, shop.getShopId());
 
         try {

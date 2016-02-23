@@ -28,16 +28,24 @@ public class Item {
 
         String query = String.format("INSERT INTO item(item_title, item_price, item_status) " +
                 "VALUES (\'%s\', %.2f, \'%s\')", itemName, itemPrice, itemStatus);
-        String queryCheck = String.format("SELECT item.item_id FROM item LEFT JOIN category_item " +
+        String queryCheck = String.format("SELECT item.item_id, item.item_price, item.item_status" +
+                " FROM item LEFT JOIN category_item " +
                 "ON item.item_id = category_item.item_id LEFT JOIN category " +
                 "ON category.category_id = category_item.category_id " +
-                "WHERE item.item_title = \'%s\' AND category.shop_id = %d",itemName, category.getShop().getShopId());
-
+                "WHERE item.item_title = \'%s\'",itemName);
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet =  statement.executeQuery(queryCheck);
-            if (  resultSet.next()  ) {
+            ResultSet resultSet = statement.executeQuery(queryCheck);
+            if (resultSet.next()) {
                 itemId = resultSet.getInt(1);
+                double price = resultSet.getInt(2);
+                String status = resultSet.getString(3);
+                if (price != itemPrice) {
+                    this.setItemPrice(itemPrice);
+                }
+                if (status != "Available") {
+                    this.setItemStatus(itemStatus);
+                }
             } else {
                 statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
                 ResultSet resultId = statement.getGeneratedKeys();

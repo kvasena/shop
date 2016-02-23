@@ -20,42 +20,49 @@ import java.util.List;
  */
 public class Worker extends Thread {
     private Shop shop;
+    private List<Item> items;
+    private Connection connection;
 
-    public Worker(Shop shop) {
+    public Worker(Connection connection, Shop shop, List<Item> items) {
         this.shop = shop;
+        this.items = items;
+        this.connection = connection;
+        run();
     }
 
-
     public void run() {
-            //Записать по 3-4 продукта в категорию
-            Item samsung = category.setItem(connection, "samsung", 4500.55, "Avaliable");
-            Item lenovo = category.setItem(connection, "lenovo", 4500.55, "Avaliable");
-            Item iphone = category.setItem(connection, "iphone", 4500.55, "Avaliable");
-            System.out.println(samsung);
-            System.out.println(lenovo);
-            System.out.println(iphone);
+        //Записать по 3-4 продукта в категорию
+        for (Item item : items) {
+            CategoryShop category = item.getItemCategory();
+            Item samsung = category.setItem(connection, "samsung", 4500.55, "Available");
+            Item lenovo = category.setItem(connection, "lenovo", 4500, "Available");
+            Item iphone = category.setItem(connection, "iphone", 4500.55, "Available");
+        }
 
-            //В какой-то из категорий изменить статусы всех товаров на «Absent»
-            for (Item eachItem : category.getItems()) {
-                eachItem.setItemStatus("Absent");
-                System.out.println(eachItem);
 
-            }
+        //В какой-то из категорий изменить статусы всех товаров на «Absent»
+        Item someItem = items.get(0);
+        CategoryShop someCategory = someItem.getItemCategory();
+        for (Item eachItem : someCategory.getItems()) {
+            eachItem.setItemStatus("Absent");
+            System.out.println(eachItem);
 
-            //половине товаров, из оставшихся категорий, изменить статус на «Expected».
-            for (Item eachItem : shop.getItems()) {
-                int count = 0;
-                if (eachItem.getItemCategory() != category && count % 2 == 0) {
+        }
+
+        //половине товаров, из оставшихся категорий, изменить статус на «Expected».
+        int count = 0;
+        for (Item eachItem : items) {
+            if (eachItem.getItemCategory() != someCategory && count % 2 == 0) {
                     eachItem.setItemStatus("Expected");
-                    count++;
-                    System.out.println(eachItem);
-                }
             }
+            count++;
+            System.out.println(eachItem);
+        }
 
-            //По товарам, что доступны увеличить цену на 20%;
-            for (Item eachItem : shop.getItemsByStatus("Available")) {
-                eachItem.setItemPrice(eachItem.getItemPrice() * 1.2);
-                System.out.println(eachItem);
-            }
+        //По товарам, что доступны увеличить цену на 20%;
+        for (Item eachItem : shop.getItemsByStatus("Available")) {
+            eachItem.setItemPrice(eachItem.getItemPrice() * 1.2);
+            System.out.println(eachItem);
+        }
     }
 }

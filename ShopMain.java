@@ -15,16 +15,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Created by kvasena on 20.02.16.
  */
 public class ShopMain {
-    private final int timer = 10000;
-    private final int maxThreads = 2;
-    private static final String host = "jdbc:mysql://localhost:3306/shop";
-    private static final String user = "test";
-    private static final String password = "test";
+    private final int interval = 10000;
+    private final String host = "jdbc:mysql://localhost:3306/shop";
+    private final String user = "test";
+    private final String password = "test";
 
     public static void main(String[] args) {
         try {
@@ -32,37 +32,27 @@ public class ShopMain {
             DriverManager.registerDriver(driver);
             Connection connection = DriverManager.getConnection(host, user, password);
             Creator[] creators = {new CreatorRozetka(), new CreatorMobilluck()};
-            List<Shop> shops = new ArrayList<Shop>();
+            List<Item> items;
+            Shop shop;
+            int numShops = creators.length;
 
             for (Creator creator : creators) {
-                Shop newShop = creator.factoryMethod(connection);
-                shops.add(newShop);
+                numShops -= 1;
+                System.nanoTime();
+                shop = creator.factoryMethod(connection);
+                items = shop.getItems();
+                ExecutorService schedule = Executors.newFixedThreadPool(1);
+                schedule.submit(new Worker(connection, shop, items));
+                schedule.shutdown();
+                System.out.println("Runnable task stop");
+                if ( numShops > 0 ) {
+                    Thread.sleep(interval);
+                }
             }
-
-            Shop shop1 = shops.get(1);
-            Shop shop2 = shops.get(0);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
-        final Worker rClass = new Worker(shop1);
-        
-        final Runnable runThreads = new Runnable() {
-            public void run() {
-                try{
-                    System.out.println("Start thread");
-                    for ( int i = 0; i < maxThreads; i++ ) {
-                        (new Thread(rClass)).start();
-                        Thread.sleep(timer);
-                    }
-                    System.out.println("End");
-                }   catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-        (new Thread(runThreads)).start();
     }
-
 }
