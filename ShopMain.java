@@ -21,12 +21,13 @@ import java.util.concurrent.*;
  * Created by kvasena on 20.02.16.
  */
 public class ShopMain {
-    private final int interval = 10000;
-    private final String host = "jdbc:mysql://localhost:3306/shop";
-    private final String user = "test";
-    private final String password = "test";
+    private static final int interval = 10000;
+    private static final String host = "jdbc:mysql://localhost:3306/shop";
+    private static final String user = "test";
+    private static final String password = "test";
 
     public static void main(String[] args) {
+
         try {
             Driver driver = new FabricMySQLDriver();
             DriverManager.registerDriver(driver);
@@ -35,20 +36,18 @@ public class ShopMain {
             List<Item> items;
             Shop shop;
             int numShops = creators.length;
+            ExecutorService schedule = Executors.newSingleThreadExecutor();
 
             for (Creator creator : creators) {
                 numShops -= 1;
-                System.nanoTime();
                 shop = creator.factoryMethod(connection);
                 items = shop.getItems();
-                ExecutorService schedule = Executors.newFixedThreadPool(1);
-                schedule.submit(new Worker(connection, shop, items));
-                schedule.shutdown();
-                System.out.println("Runnable task stop");
+                schedule.execute(new Worker(connection, shop, items));
                 if ( numShops > 0 ) {
                     Thread.sleep(interval);
                 }
             }
+            schedule.shutdown();
         }catch(InterruptedException e) {
             e.printStackTrace();
         } catch(SQLException e) {

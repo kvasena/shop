@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -27,7 +29,6 @@ public class Worker extends Thread {
         this.shop = shop;
         this.items = items;
         this.connection = connection;
-        run();
     }
 
     public void run() {
@@ -64,5 +65,6 @@ public class Worker extends Thread {
             eachItem.setItemPrice(eachItem.getItemPrice() * 1.2);
             System.out.println(eachItem);
         }
+        System.out.println("Running class stop");
     }
 }
